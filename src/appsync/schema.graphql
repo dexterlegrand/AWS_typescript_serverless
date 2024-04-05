@@ -1,0 +1,2868 @@
+# ****************************************************************************
+# ABR
+# ****************************************************************************
+type ABNInformation {
+  abn: String!
+  abnStatus: String!
+  abnStatusEffectiveFrom: String!
+  acn: String!
+  addressDate: String
+  addressPostcode: String
+  addressState: String
+  businessName: [String]
+  entityName: String
+  entityTypeCode: String
+  entityTypeName: String
+  gst: String
+  message: String
+}
+
+type AbrNameSearchInformation {
+  abn: String!
+  abnStatus: String!
+  isCurrent: Boolean!
+  name: String!
+  nameType: String!
+  postcode: String!
+  state: String!
+}
+
+type ModelAbrNameSearchInformationConnection @aws_iam @aws_cognito_user_pools {
+  items: [AbrNameSearchInformation]!
+}
+
+# ****************************************************************************
+# ACTIVITY
+# ****************************************************************************
+type Activity @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  compositeId: ID!
+  userId: ID
+  entityId: ID
+  type: ActivityType!
+  message: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+enum ActivityType {
+  TASK
+}
+
+type ModelActivityConnection @aws_iam @aws_cognito_user_pools {
+  items: [Activity]!
+  nextToken: String
+}
+
+input ModelActivityFilterInput {
+  userId: ModelIDInput
+  entityId: ModelIDInput
+  type: ModelActivityTypeInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelActivityFilterInput]
+  or: [ModelActivityFilterInput]
+  not: ModelActivityFilterInput
+}
+
+input ModelActivityTypeInput {
+  eq: ActivityType
+  ne: ActivityType
+}
+
+# ****************************************************************************
+# ADDRESS
+# ****************************************************************************
+type Address {
+  #contactName: String
+  #contactNumber: AWSPhone
+  #address1: String!
+  #address2: String
+  #country: String!
+  #countryCode: String
+  #state: String!
+  #stateCode: String
+  #city: String!
+  #postalCode: String!
+
+  placeId: ID
+  contactName: String
+  contactNumber: AWSPhone
+  address1: String
+  unitNumber: String
+  streetNumber: String
+  streetName: String!
+  streetType: String
+  city: String!
+  country: String!
+  countryCode: String
+  state: String!
+  stateCode: String
+  postalCode: String!
+}
+
+input AddressInput {
+  addressId: ID
+  contactName: String
+  contactNumber: AWSPhone
+  address1: String!
+  address2: String
+  country: String
+  countryCode: String
+  streetNumber: String
+  streetName: String
+  unitNumber: String
+  streetType: String
+  city: String!
+  state: String!
+  stateCode: String
+  postalCode: String!
+}
+
+# ****************************************************************************
+# ADMIN
+# ****************************************************************************
+type Admin @aws_iam @aws_cognito_user_pools {
+  firstName: String!
+  lastName: String!
+  email: AWSEmail!
+  phone: AWSPhone
+  role: AdminRole
+  hasAccessed: Boolean
+  createdBy: ID
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID!
+  owner: String
+}
+
+enum AdminRole {
+  SuperAdmins
+  Admins
+}
+
+input CreateAdminInput {
+  firstName: String!
+  lastName: String!
+  email: AWSEmail!
+  role: AdminRole
+}
+
+input DeleteAdminInput {
+  id: ID!
+}
+
+type ModelAdminConnection @aws_iam @aws_cognito_user_pools {
+  items: [Admin]!
+  nextToken: String
+}
+
+input ModelAdminRoleInput {
+  eq: AdminRole
+  ne: AdminRole
+}
+
+input ModelAdminFilterInput {
+  firstName: ModelStringInput
+  lastName: ModelStringInput
+  email: ModelStringInput
+  phone: ModelStringInput
+  role: ModelAdminRoleInput
+  hasAccessed: ModelBooleanInput
+  createdBy: ModelIDInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelAdminFilterInput]
+  or: [ModelAdminFilterInput]
+  not: ModelAdminFilterInput
+}
+
+input ModelAdminConditionInput {
+  firstName: ModelStringInput
+  lastName: ModelStringInput
+  email: ModelStringInput
+  phone: ModelStringInput
+  role: ModelAdminRoleInput
+  hasAccessed: ModelBooleanInput
+  createdBy: ModelIDInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelAdminConditionInput]
+  or: [ModelAdminConditionInput]
+  not: ModelAdminConditionInput
+}
+
+input UpdateAdminInput {
+  firstName: String
+  lastName: String
+  email: AWSEmail
+  phone: AWSPhone
+  role: AdminRole
+  hasAccessed: Boolean
+  createdBy: ID
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID!
+}
+
+# ****************************************************************************
+# AUTOCOMPLETE RESULT
+# ****************************************************************************
+type AutocompleteResult {
+  id: ID!
+  value: String!
+  label: String!
+  info: String
+  type: AutocompleteType!
+  searchName: String!
+  metadata: AWSJSON
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+type GetAutoCompleteResult {
+  entity: Entity
+  contact: Contact
+}
+
+enum AutocompleteType {
+  ENTITY
+  TAX
+}
+
+input ModelAutocompleteResultFilterInput {
+  searchName: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelEntityFilterInput]
+  or: [ModelEntityFilterInput]
+  not: ModelEntityFilterInput
+}
+
+type ModelAutocompleteResultConnection @aws_iam @aws_cognito_user_pools {
+  items: [AutocompleteResult]!
+  nextToken: String
+}
+
+enum PaymentProvider {
+  ZAI
+  APP_STORE
+  GOOGLE_PLAY
+}
+
+# ****************************************************************************
+# BENEFICIAL OWNER
+# ****************************************************************************
+type BeneficialOwner @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  entityId: ID!
+  firstName: String
+  lastName: String
+  providerEntityId: ID! # Frankieone entityId
+  verificationStatus: BeneficialOwnerVerificationStatus
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  owner: String
+}
+
+enum BeneficialOwnerVerificationStatus {
+  UNVERIFIED
+}
+
+type ModelBeneficialOwnersConnection @aws_iam @aws_cognito_user_pools {
+  items: [BeneficialOwner]!
+  nextToken: String
+}
+
+# ****************************************************************************
+# CONTACTS
+# ****************************************************************************
+type Contact @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  entityId: ID!
+  firstName: String
+  lastName: String
+  email: AWSEmail
+  phone: AWSPhone
+  companyName: String
+  searchName: String # is either companyName or first and last name
+  status: ContactStatus
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  contactType: ContactType
+  owner: String
+}
+
+enum ContactType {
+  CLIENT
+  NORMAL
+}
+
+input CreateContactInput {
+  entityId: ID!
+  firstName: String
+  lastName: String
+  email: AWSEmail
+  phone: AWSPhone
+  status: ContactStatus
+  companyName: String
+}
+
+input UpdateContactInput {
+  id: ID!
+  entityId: ID
+  firstName: String
+  lastName: String
+  email: AWSEmail
+  phone: AWSPhone
+  companyName: String
+  status: ContactStatus
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+input CreateContactBulkImportInput {
+  entityId: ID!
+  fileKey: String!
+  fields: ContactFieldsInput!
+}
+
+input ContactFieldsInput {
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  companyName: String
+}
+
+enum ContactStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+type ModelContactConnection @aws_iam @aws_cognito_user_pools {
+  items: [Contact]!
+  nextToken: String
+}
+
+input ModelContactTypeInput {
+  eq: ContactType
+  ne: ContactType
+}
+
+input ModelContactStatusInput {
+  eq: ContactStatus
+  ne: ContactStatus
+}
+
+input ModelContactFilterInput {
+  searchName: ModelStringInput
+  type: ModelContactTypeInput
+  status: ModelContactStatusInput
+  and: [ModelContactFilterInput]
+  or: [ModelContactFilterInput]
+  not: ModelContactFilterInput
+}
+
+# ****************************************************************************
+# CONVERSATION
+# ****************************************************************************
+type Conversation @aws_iam @aws_cognito_user_pools {
+  title: String
+  image: Image
+  country: String
+  messages(
+    createdAt: ModelStringKeyConditionInput
+    filter: ModelMessageFilterInput
+    sortDirection: ModelSortDirection
+    limit: Int
+    nextToken: String
+  ): ModelMessageConnection
+  userConversations(
+    createdAt: ModelStringKeyConditionInput
+    filter: ModelUserConversationFilterInput
+    sortDirection: ModelSortDirection
+    limit: Int
+    nextToken: String
+  ): ModelUserConversationConnection
+  users: [String]
+  readBy: [String]
+  createdBy: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID!
+}
+
+type ModelConversationConnection @aws_iam @aws_cognito_user_pools {
+  items: [Conversation]!
+  nextToken: String
+}
+
+input ModelConversationFilterInput {
+  title: ModelStringInput
+  country: ModelStringInput
+  users: ModelStringInput
+  readBy: ModelStringInput
+  createdBy: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelConversationFilterInput]
+  or: [ModelConversationFilterInput]
+  not: ModelConversationFilterInput
+}
+
+input ModelConversationConditionInput {
+  title: ModelStringInput
+  country: ModelStringInput
+  users: ModelStringInput
+  readBy: ModelStringInput
+  createdBy: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelConversationConditionInput]
+  or: [ModelConversationConditionInput]
+  not: ModelConversationConditionInput
+}
+
+input CreateConversationInput {
+  title: String
+  image: ImageInput
+  country: String
+  users: [String]
+  readBy: [String]
+  createdBy: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID
+}
+
+input UpdateConversationInput {
+  title: String
+  image: ImageInput
+  country: String
+  users: [String]
+  readBy: [String]
+  createdBy: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID!
+}
+
+input DeleteConversationInput {
+  id: ID!
+}
+
+input ModelSubscriptionConversationFilterInput {
+  title: ModelSubscriptionStringInput
+  country: ModelSubscriptionStringInput
+  readBy: ModelSubscriptionStringInput
+  createdBy: ModelSubscriptionStringInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionConversationFilterInput]
+  or: [ModelSubscriptionConversationFilterInput]
+}
+
+# ****************************************************************************
+# ENTITY
+# ****************************************************************************
+type Entity @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  type: EntityType!
+  # abn: String
+  taxNumber: String
+  billerCode: String
+  name: String!
+  legalName: String
+  searchName: String # is either companyName or first and last name
+  address: Address
+  logo: Image
+  beneficialOwners(
+    sortDirection: ModelSortDirection
+    limit: Int
+    nextToken: String
+  ): ModelBeneficialOwnersConnection
+  entityUsers(
+    filter: ModelEntityUserFilterInput
+    sortDirection: ModelSortDirection
+    limit: Int
+    nextToken: String
+  ): ModelEntityUserConnection
+  zaiCompanyId: ID
+  zaiBankAccountId: ID
+  zaiDigitalWalletId: ID
+  zaiBpayCrn: String
+  contact: EntityContact
+  phone: String
+  paymentMethods(
+    filter: ModelPaymentMethodFilterInput
+    sortDirection: ModelSortDirection
+    limit: Int
+    nextToken: String
+  ): ModelPaymentMethodConnection
+  paymentMethodId: String
+  disbursementMethodId: String
+  receivingAccounts(
+    filter: ModelPaymentMethodFilterInput
+    sortDirection: ModelSortDirection
+    limit: Int
+    nextToken: String
+  ): ModelPaymentMethodConnection
+  ocrEmail: AWSEmail
+  verificationStatus: VerificationStatus
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  owner: String!
+}
+
+type EntityContact {
+  firstName: String!
+  lastName: String!
+  email: AWSEmail!
+}
+
+enum VerificationStatus {
+  PASSED
+  MANUALLY_PASSED
+  NEEDS_ATTENTION
+  FAILED
+  MANUALLY_FAILED
+  UNCHECKED
+  ARCHIVED
+  INACTIVE
+}
+
+enum EntityType {
+  SOLE_TRADER
+  PARTNERSHIP
+  COMPANY
+  INDIVIDUAL
+  TRUST
+  NOT_FOR_PROFIT
+  SELF_MANAGED_SUPER_FUND
+  BPAY
+}
+
+input CreateEntityInput {
+  type: EntityType!
+  taxNumber: String
+  name: String!
+  firstName: String
+  lastName: String
+  address: AddressInput
+  logo: ImageInput
+}
+
+input UpdateEntityInput {
+  id: ID!
+  type: EntityType
+  taxNumber: String
+  name: String
+  address: AddressInput
+  logo: ImageInput
+  paymentMethodId: ID
+  disbursementMethodId: ID
+  # createdAt: AWSDateTime
+  # updatedAt: AWSDateTime
+}
+
+input UpdateOnboardingEntityInput {
+  owner: ID!
+  type: EntityType
+  taxNumber: String
+  name: String
+  address: AddressInput
+  logo: ImageInput
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+type ModelEntityConnection @aws_iam @aws_cognito_user_pools {
+  items: [Entity]!
+  nextToken: String
+}
+
+input ModelEntityTypeInput {
+  eq: EntityType
+  ne: EntityType
+}
+
+input ModelEntityFilterInput {
+  name: ModelStringInput
+  searchName: ModelStringInput
+  taxNumber: ModelStringInput
+  address: ModelStringInput
+  type: ModelEntityTypeInput
+  owner: ModelIDInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelEntityFilterInput]
+  or: [ModelEntityFilterInput]
+  not: ModelEntityFilterInput
+}
+
+input ModelEntityConditionInput {
+  name: ModelStringInput
+  taxNumber: ModelStringInput
+  address: ModelStringInput
+  type: ModelEntityTypeInput
+  owner: ModelIDInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelEntityConditionInput]
+  or: [ModelEntityConditionInput]
+  not: ModelEntityConditionInput
+}
+
+input DeleteEntityInput {
+  id: ID!
+}
+
+type ModelEntityTaskConnection @aws_iam @aws_cognito_user_pools {
+  items: [Task]!
+  toNextToken: String
+  fromNextToken: String
+}
+
+input ModelSubscriptionEntityFilterInput {
+  entityId: ModelSubscriptionIDInput
+  and: [ModelSubscriptionNotificationFilterInput]
+  or: [ModelSubscriptionNotificationFilterInput]
+}
+
+input LookupEntityOwnershipInput {
+  entityId: ID!
+}
+
+input CreateVerificationTokenInput {
+  beneficialOwnerId: ID!
+}
+
+type VerificationUiToken {
+  token: String!
+}
+
+# ****************************************************************************
+# ENTITY USER
+# ****************************************************************************
+type EntityUser @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  entityId: ID!
+  userId: ID!
+  firstName: String
+  lastName: String
+  role: EntityUserRole
+  entitySearchName: String # is either companyName or first and last name
+  entity: Entity
+  searchName: String
+  createdBy: ID
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+enum EntityUserRole {
+  OWNER
+  ADMIN
+  ACCOUNTANT
+  CONTRIBUTOR
+}
+
+type ModelEntityUserConnection @aws_iam @aws_cognito_user_pools {
+  items: [EntityUser]!
+  nextToken: String
+}
+
+input ModelEntityUserFilterInput {
+  entityId: ModelIDInput
+  # userId: ModelIDInput
+  entitySearchName: ModelStringInput
+  searchName: ModelStringInput
+  role: EntityUserRole
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelEntityUserFilterInput]
+  or: [ModelEntityUserFilterInput]
+  not: ModelEntityUserFilterInput
+}
+
+input CreateEntityUserInput {
+  entityId: ID!
+  userId: ID!
+  firstName: String
+  lastName: String
+  email: AWSEmail
+  role: CreateEntityUserRole
+}
+
+enum CreateEntityUserRole {
+  ADMIN
+  ACCOUNTANT
+  CONTRIBUTOR
+}
+
+input DeleteEntityUserInput {
+  entityId: ID!
+  userId: ID!
+}
+
+# ****************************************************************************
+# FRANKIEONE
+# ****************************************************************************
+type BusinessLookupResult {
+  name: String
+  legalNames: [String]
+  businessNames: [String]
+  mainNames: [String]
+  tradingNames: [String]
+  score: String
+  state: String
+  postalCode: String
+  type: String
+  abn: String
+  acn: String
+  isActive: Boolean
+}
+
+# ****************************************************************************
+# IMAGE
+# ****************************************************************************
+type Image @aws_iam @aws_cognito_user_pools {
+  alt: String
+  identityId: String
+  key: String!
+  level: S3UploadLevel!
+  type: String
+}
+
+input ImageInput {
+  alt: String
+  identityId: String
+  key: String!
+  level: S3UploadLevel!
+  type: String
+}
+
+# ****************************************************************************
+# IN-APP PURCHASE
+# ****************************************************************************
+input VerifyIAPInput {
+  receipt: ID!
+  service: PaymentProvider!
+  subscriptionId: String
+}
+
+# ****************************************************************************
+# MESSAGE
+# ****************************************************************************
+type Message @aws_iam @aws_cognito_user_pools {
+  conversationId: ID!
+  text: String
+  attachments: [S3Upload]
+  users: [String]!
+  receiver: ID!
+  sender: ID!
+  createdBy: String!
+  readBy: [String]
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime
+  id: ID!
+  conversationMessagesId: ID
+}
+
+type ModelMessageConnection @aws_iam @aws_cognito_user_pools {
+  items: [Message]!
+  nextToken: String
+}
+
+input ModelMessageFilterInput {
+  conversationId: ModelIDInput
+  text: ModelStringInput
+  users: ModelStringInput
+  receiver: ModelIDInput
+  sender: ModelIDInput
+  createdBy: ModelStringInput
+  readBy: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelMessageFilterInput]
+  or: [ModelMessageFilterInput]
+  not: ModelMessageFilterInput
+  conversationMessagesId: ModelIDInput
+}
+
+input ModelMessageConditionInput {
+  conversationId: ModelIDInput
+  text: ModelStringInput
+  users: ModelStringInput
+  receiver: ModelIDInput
+  sender: ModelIDInput
+  createdBy: ModelStringInput
+  readBy: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelMessageConditionInput]
+  or: [ModelMessageConditionInput]
+  not: ModelMessageConditionInput
+  conversationMessagesId: ModelIDInput
+}
+
+input CreateMessageInput {
+  conversationId: ID!
+  text: String
+  attachments: [S3UploadInput]
+  users: [String]!
+  receiver: ID!
+  sender: ID!
+  createdBy: String!
+  readBy: [String]
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID
+  conversationMessagesId: ID
+}
+
+input UpdateMessageInput {
+  conversationId: ID
+  text: String
+  attachments: [S3UploadInput]
+  users: [String]
+  receiver: ID
+  sender: ID
+  createdBy: String
+  readBy: [String]
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID!
+  conversationMessagesId: ID
+}
+
+input ModelSubscriptionMessageFilterInput {
+  conversationId: ModelSubscriptionIDInput
+  text: ModelSubscriptionStringInput
+  receiver: ModelSubscriptionIDInput
+  sender: ModelSubscriptionIDInput
+  createdBy: ModelSubscriptionStringInput
+  readBy: ModelSubscriptionStringInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionMessageFilterInput]
+  or: [ModelSubscriptionMessageFilterInput]
+}
+
+# ****************************************************************************
+# NOTIFICATION
+# ****************************************************************************
+type Notification @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  title: String
+  message: String
+  status: NotificationStatus
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  type: String
+  owner: ID!
+}
+
+enum NotificationStatus {
+  UNREAD
+  READ
+}
+
+input CreateNotificationInput {
+  title: String
+  message: String
+  status: NotificationStatus
+  type: String
+  owner: ID!
+}
+
+input UpdateNotificationInput {
+  id: ID!
+  status: NotificationStatus!
+}
+
+type ModelNotificationConnection @aws_iam @aws_cognito_user_pools {
+  items: [Notification]!
+  nextToken: String
+}
+
+input NotificationStatusInput {
+  eq: NotificationStatus
+  ne: NotificationStatus
+}
+
+input ModelNotificationFilterInput {
+  status: NotificationStatusInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  type: ModelStringInput
+  and: [ModelNotificationFilterInput]
+  or: [ModelNotificationFilterInput]
+  not: ModelNotificationFilterInput
+}
+
+#TODO: remove owner?
+input ModelSubscriptionNotificationFilterInput {
+  owner: ModelSubscriptionStringInput
+  and: [ModelSubscriptionNotificationFilterInput]
+  or: [ModelSubscriptionNotificationFilterInput]
+}
+
+# ****************************************************************************
+# OPTIONS
+# ****************************************************************************
+type Option @aws_iam @aws_cognito_user_pools {
+  name: String
+  label: String!
+  value: String!
+  group: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID!
+}
+
+type ModelOptionConnection @aws_iam @aws_cognito_user_pools {
+  items: [Option]!
+  nextToken: String
+}
+
+input ModelOptionFilterInput {
+  name: ModelStringInput
+  label: ModelStringInput
+  value: ModelStringInput
+  group: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelOptionFilterInput]
+  or: [ModelOptionFilterInput]
+  not: ModelOptionFilterInput
+}
+
+input ModelOptionConditionInput {
+  name: ModelStringInput
+  label: ModelStringInput
+  value: ModelStringInput
+  group: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelOptionConditionInput]
+  or: [ModelOptionConditionInput]
+  not: ModelOptionConditionInput
+}
+
+input CreateOptionInput {
+  name: String
+  label: String!
+  value: String!
+  group: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID
+}
+
+input UpdateOptionInput {
+  name: String
+  label: String
+  value: String
+  group: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID!
+}
+
+input DeleteOptionInput {
+  id: ID!
+}
+
+# ****************************************************************************
+# PAYMENT
+# ****************************************************************************
+type Payment @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  paymentGroupId: ID
+  providerTransactionId: String
+  paymentProvider: PaymentProvider
+  disbursementId: ID
+  # entityId: ID!
+  # entityIdFrom: ID
+  fromId: ID!
+  # fromType: FromToType
+  toId: ID
+  toType: FromToType
+  entityIdTo: ID
+  amount: Int
+  # bills: [BillsPaymentType!]!
+  installment: Int
+  installments: Int
+  feeAmount: Int
+  paymentType: PaymentType
+  taxAmount: Int
+  currency: String
+  feeId: ID
+  ipAddress: String
+  status: PaymentStatus
+  scheduledAt: AWSDate
+  paidAt: AWSDateTime
+  declinedAt: AWSDateTime
+  createdAt: AWSDateTime
+  zaiUpdatedAt: AWSDateTime
+  updatedAt: AWSDateTime
+  owner: String
+}
+
+enum PaymentStatus {
+  SCHEDULED
+  PENDING_USER_CONFIRMATION
+  USER_CONFIRMED
+  DECLINED
+  PENDING
+  PAYMENT_REQUIRED
+  WIRE_PENDING
+  PAYMENT_PENDING
+  PAYMENT_HELD
+  PAYMENT_AUTHORIZED
+  VOID_PENDING
+  VOIDED
+  FRAUD_HOLD
+  PAYMENT_DEPOSITED
+  WORK_COMPLETED
+  PROBLEM_FLAGGED
+  PROBLEM_RESOLVE_REQUESTED
+  PROBLEM_ESCALATED
+  COMPLETED
+  CANCELLED
+  REFUNDED
+  REFUND_PENDING
+  REFUND_FLAGGED
+  OFF_PLATFORM_REFUNDED
+  PARTIAL_COMPLETED
+  PARTIAL_PAID
+  OFF_PLATFORM_CHARGEDBACK
+}
+
+input CreatePaymentInput {
+  entityId: ID!
+  paymentMethodId: String!
+  billPayments: [BillsPaymentInput!]!
+  idempotencyKey: ID
+}
+
+input CreateTaskPaymentInput {
+  taskId: ID!
+  entityId: ID!
+  paymentMethodId: String!
+}
+
+input BillsPaymentInput {
+  id: ID!
+  paymentType: PaymentType!
+  installments: Int!
+  scheduledAt: AWSDate!
+}
+
+enum PaymentType {
+  PAY_NOW
+  SCHEDULED
+  INSTALLMENTS
+}
+
+input RetryPaymentInput {
+  id: ID!
+  paymentMethodId: String!
+}
+
+type ModelPaymentConnection @aws_iam @aws_cognito_user_pools {
+  items: [Payment]!
+  nextToken: String
+}
+
+input ModelPaymentFilterInput {
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelTaskPaymentFilterInput]
+  or: [ModelTaskPaymentFilterInput]
+  not: ModelTaskPaymentFilterInput
+}
+
+# ****************************************************************************
+# PAYMENT METHOD
+# ****************************************************************************
+type PaymentMethod {
+  id: ID!
+  paymentMethodType: PaymentMethodType!
+  type: String
+  fullName: String
+  number: String
+  expMonth: String
+  expYear: String
+  accountName: String
+  bankName: String
+  accountNumber: String
+  routingNumber: String
+  holderType: String
+  accountType: String
+  status: PaymentMethodStatus
+  accountDirection: AccountDirection
+  expiresAt: AWSDateTime
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  # owner: String
+}
+
+# input PaymentMethodInput {
+#   id: ID!
+#   paymentMethodType: PaymentMethodType!
+#   primary: Boolean
+#   createdAt: AWSDateTime
+#   updatedAt: AWSDateTime
+# }
+
+input CreatePaymentMethodInput {
+  entityId: String!
+  paymentMethodId: String!
+  paymentMethodType: PaymentMethodType!
+  accountDirection: AccountDirection
+  # primary: Boolean
+}
+
+input UpdatePaymentMethodInput {
+  id: ID!
+  # primary: Boolean
+  status: PaymentMethodStatus
+}
+
+input ModelPaymentMethodFilterInput {
+  paymentMethodType: ModelPaymentMethodTypeInput
+  type: ModelStringInput
+  # primary: ModelBooleanInput
+  status: ModelPaymentMethodStatusInput
+  accountDirection: ModelAccountDirectionInput
+  expiresAt: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelPaymentMethodFilterInput]
+  or: [ModelPaymentMethodFilterInput]
+  not: ModelPaymentMethodFilterInput
+}
+
+type ModelPaymentMethodConnection {
+  items: [PaymentMethod]!
+  nextToken: String
+}
+
+enum PaymentMethodType {
+  CARD
+  BANK
+}
+
+enum PaymentMethodStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum AccountDirection {
+  PAYMENT
+  DISBURSEMENT
+}
+
+input ModelPaymentMethodTypeInput {
+  eq: PaymentMethodType
+  ne: PaymentMethodType
+}
+
+input ModelAccountDirectionInput {
+  eq: AccountDirection
+  ne: AccountDirection
+}
+
+input ModelPaymentMethodStatusInput {
+  eq: PaymentMethodStatus
+  ne: PaymentMethodStatus
+}
+
+# ****************************************************************************
+# PAYMENT ACCOUNT
+# ****************************************************************************
+
+# Probably won't be exposed to the client
+type PaymentAccount @aws_iam {
+  id: ID!
+  entityId: ID!
+  reference: String
+  billerCode: String
+  zaiUserId: ID!
+  zaiBpayAccountId: ID! #TODO: rename to zaiAccountId to be reused for other payment methods?
+  zaiUserWalletId: ID! #TODO: is this stored here?
+  paymentAccountType: PaymentAccountType!
+  direction: PaymentAccountDirection!
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+enum PaymentAccountType {
+  BPAY
+}
+
+enum PaymentAccountDirection {
+  PAY_IN
+  PAY_OUT
+}
+
+# ****************************************************************************
+# PUSH NOTIFICATION
+# ****************************************************************************
+input CreatePushNotificationInput {
+  starId: ID
+  title: String
+  message: String
+}
+
+# ****************************************************************************
+# RATINGS
+# ****************************************************************************
+type Rating @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  ratingBy: ID
+  owner: String
+  name: String
+  rating: Int
+  comment: String
+  status: RatingStatus
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+input UpdateRatingInput {
+  id: ID!
+  rating: Int
+  comment: String
+}
+
+enum RatingStatus {
+  PENDING
+  COMPLETED
+}
+
+type ModelRatingConnection @aws_iam @aws_cognito_user_pools {
+  items: [Rating]!
+  nextToken: String
+}
+
+# ****************************************************************************
+# REFERRER
+# ****************************************************************************
+type Referrer @aws_iam @aws_cognito_user_pools {
+  userId: ID
+  firstName: String
+  lastName: String
+  code: String
+  email: AWSEmail
+  referralCount: Int
+  referredByUserId: ID
+  referredByCode: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID!
+  owner: String
+}
+
+# ****************************************************************************
+# S3UPLOAD
+# ****************************************************************************
+type S3Upload @aws_iam @aws_cognito_user_pools {
+  identityId: String
+  key: String!
+  level: S3UploadLevel!
+  type: S3UploadType!
+}
+
+input S3UploadInput {
+  identityId: String
+  key: String!
+  level: S3UploadLevel!
+  type: S3UploadType!
+}
+
+enum S3UploadType {
+  IMAGE
+  PDF
+  VIDEO
+  FILE
+}
+
+enum S3UploadLevel {
+  public
+  protected
+  private
+}
+
+# ****************************************************************************
+# SIGNATURE
+# ****************************************************************************
+type Signature @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  userId: ID!
+  key: String!
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+input CreateSignatureInput {
+  key: String!
+}
+
+input DeleteSignatureInput {
+  userId: ID!
+  createdAt: AWSDateTime!
+}
+
+type ModelSignatureConnection {
+  items: [Signature]!
+  nextToken: String
+}
+
+input ModelSignatureFilterInput {
+  key: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelSignatureFilterInput]
+  or: [ModelSignatureFilterInput]
+  not: ModelSignatureFilterInput
+}
+
+# ****************************************************************************
+# TASK
+# ****************************************************************************
+type Task @aws_iam @aws_cognito_user_pools {
+  entityId: ID!
+  id: ID!
+  activity(
+    createdAt: ModelStringKeyConditionInput
+    filter: ModelActivityFilterInput
+    sortDirection: ModelSortDirection
+    limit: Int
+    nextToken: String
+  ): ModelActivityConnection
+  amount: Int
+  annotations: [AWSJSON]
+  # amountReceived: Int
+  # amountOutstanding: Int
+  entityIdFrom: ID
+  fromId: ID!
+  # fromType: FromToType
+  toId: ID!
+  toType: FromToType!
+  entityIdTo: ID
+  contactIdFrom: ID
+  contactIdTo: ID
+  contactId: ID
+  fromSearchStatus: String # entityId#TaskSearchStatus
+  toSearchStatus: String # entityId#TaskSearchStatus
+  searchName: String
+  status: TaskStatus!
+  signatureStatus: TaskSignatureStatus
+  paymentStatus: TaskPaymentStatus
+  type: TaskType!
+  documents: [S3Upload]
+  paymentFrequency: PaymentFrequency
+  paymentTypes: [PaymentType]!
+  reference: String
+  signers: [EntityUser]
+  payments(
+    scheduledAt: ModelStringKeyConditionInput
+    filter: ModelPaymentFilterInput
+    sortDirection: ModelSortDirection
+    limit: Int
+    nextToken: String
+  ): ModelPaymentConnection
+  taskPayments(
+    createdAt: ModelStringKeyConditionInput
+    filter: ModelTaskPaymentFilterInput
+    sortDirection: ModelSortDirection
+    limit: Int
+    nextToken: String
+  ): ModelTaskPaymentConnection
+  createdBy: ID!
+  entityIdBy: ID
+  dueAt: AWSDate!
+  noteForSelf: String
+  noteForOther: String
+  direction: TaskDirection
+  readBy: [ID]
+  paymentAt: AWSDate
+  lodgementAt: AWSDate
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  readAt: AWSDateTime
+  owner: String
+}
+
+enum FromToType {
+  ENTITY
+  CONTACT
+}
+
+enum TaskSearchStatus {
+  INCOMPLETE
+  COMPLETED
+  ARCHIVED
+}
+
+enum TaskSignatureStatus {
+  PENDING_SIGNATURE
+  SIGNED
+  NOT_SIGNABLE
+}
+
+enum TaskPaymentStatus {
+  PENDING_PAYMENT
+  PENDING_TRANSFER
+  SCHEDULED
+  PAID
+  DECLINED
+  NOT_PAYABLE
+  MARKED_AS_PAID
+}
+
+enum TaskType {
+  SIGN_PAY
+  SIGN_ONLY
+  PAY_ONLY
+}
+
+enum TaskStatus {
+  DRAFT
+  REVIEW
+  INCOMPLETE
+  SCHEDULED
+  COMPLETED
+  ARCHIVED
+}
+
+enum PaymentFrequency {
+  ONCE
+  WEEKLY
+  FORTNIGHTLY
+  MONTHLY
+  QUARTERLY
+  ANNUALLY
+}
+
+input CreateTaskInput {
+  fromId: ID!
+  # fromType: FromToType!
+  toId: ID!
+  toType: FromToType!
+  type: TaskType!
+  direction: TaskDirection!
+  documents: [S3UploadInput]
+  paymentFrequency: PaymentFrequency
+  paymentTypes: [PaymentType]
+  reference: String
+  amount: Int
+  noteForSelf: String
+  noteForOther: String
+  signers: [SignerInput]
+  annotations: [AWSJSON]
+  dueAt: AWSDate!
+  paymentAt: AWSDate
+  lodgementAt: AWSDate
+  # entityIdFrom: ID
+  # entityIdTo: ID
+  # contactIdFrom: ID
+  # contactIdTo: ID
+}
+
+enum TaskDirection {
+  SENDING
+  RECEIVING
+}
+
+input UpdateTaskInput {
+  id: ID!
+  entityId: ID!
+  paymentStatus: UpdateTaskPaymentStatus
+}
+
+enum UpdateTaskPaymentStatus {
+  MARKED_AS_PAID
+  PENDING_PAYMENT
+}
+
+input SignerInput {
+  userId: String
+  signerType: SignerType
+}
+
+enum SignerType {
+  ACCOUNTANT
+  ENTITY_USER
+}
+
+type ModelTaskConnection @aws_iam @aws_cognito_user_pools {
+  items: [Task]!
+  nextToken: String
+}
+
+# TODO: not worked on / to complete
+input ModelTaskFilterInput {
+  #entityId: ModelIDInput
+  status: TaskStatus
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelTaskFilterInput]
+  or: [ModelTaskFilterInput]
+  not: ModelTaskFilterInput
+}
+
+input CreateTaskDocumentUrlInput {
+  taskId: ID!
+  entityId: ID!
+}
+
+type TaskDocumentUrl {
+  url: String
+  expiresAt: AWSDateTime
+}
+
+# ****************************************************************************
+# TASK PAYMENTS
+# ****************************************************************************
+type TaskPayment @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  taskId: ID!
+  paymentId: ID!
+  payment: Payment
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+input ModelTaskPaymentFilterInput {
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelTaskPaymentFilterInput]
+  or: [ModelTaskPaymentFilterInput]
+  not: ModelTaskPaymentFilterInput
+}
+
+type ModelTaskPaymentConnection @aws_iam @aws_cognito_user_pools {
+  items: [TaskPayment]!
+  nextToken: String
+}
+
+# ****************************************************************************
+# TEAM
+# ****************************************************************************
+type Team @aws_iam @aws_cognito_user_pools {
+  title: String!
+  teamUsers(
+    createdAt: ModelStringKeyConditionInput
+    filter: ModelTeamUserFilterInput
+    sortDirection: ModelSortDirection
+    limit: Int
+    nextToken: String
+  ): ModelTeamUserConnection
+  ownerUserId: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID!
+  owner: String
+}
+
+type ModelTeamConnection @aws_iam @aws_cognito_user_pools {
+  items: [Team]!
+  nextToken: String
+}
+
+input ModelTeamFilterInput {
+  title: ModelStringInput
+  ownerUserId: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelTeamFilterInput]
+  or: [ModelTeamFilterInput]
+  not: ModelTeamFilterInput
+}
+
+input ModelTeamConditionInput {
+  title: ModelStringInput
+  ownerUserId: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelTeamConditionInput]
+  or: [ModelTeamConditionInput]
+  not: ModelTeamConditionInput
+}
+
+input UpdateTeamInput {
+  title: String
+  ownerUserId: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID!
+}
+
+input ModelSubscriptionTeamFilterInput {
+  title: ModelSubscriptionStringInput
+  ownerUserId: ModelSubscriptionStringInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionTeamFilterInput]
+  or: [ModelSubscriptionTeamFilterInput]
+}
+
+# ****************************************************************************
+# TEAM USER
+# ****************************************************************************
+type TeamUser @aws_iam @aws_cognito_user_pools {
+  teamId: ID!
+  team: Team
+  userId: ID!
+  user: User
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  owners: [String]
+  id: ID!
+  teamTeamUsersId: ID
+}
+
+input CreateTeamInput {
+  title: String!
+}
+
+input CreateTeamUserInput {
+  teamId: ID!
+  firstName: String!
+  lastName: String!
+  email: AWSEmail!
+  teamTeamUsersId: ID
+}
+
+input DeleteTeamUserInput {
+  id: String
+}
+
+input ModelTeamUserFilterInput {
+  teamId: ModelIDInput
+  userId: ModelIDInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  owners: ModelStringInput
+  and: [ModelTeamUserFilterInput]
+  or: [ModelTeamUserFilterInput]
+  not: ModelTeamUserFilterInput
+  teamTeamUsersId: ModelIDInput
+}
+
+type ModelTeamUserConnection @aws_iam @aws_cognito_user_pools {
+  items: [TeamUser]!
+  nextToken: String
+}
+
+input ModelTeamUserConditionInput {
+  teamId: ModelIDInput
+  userId: ModelIDInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  owners: ModelStringInput
+  and: [ModelTeamUserConditionInput]
+  or: [ModelTeamUserConditionInput]
+  not: ModelTeamUserConditionInput
+  teamTeamUsersId: ModelIDInput
+}
+
+# ****************************************************************************
+# TRANSACTION
+# ****************************************************************************
+type Transaction @aws_iam @aws_cognito_user_pools {
+  userId: String
+  purchaseToken: String
+  expiresAt: AWSDateTime
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID!
+  owner: String
+}
+
+type Translation {
+  language: String!
+  namespace: String!
+  data: AWSJSON
+}
+
+type TranslationConnection {
+  language: String
+  items: [Translation]
+}
+
+input CreateTranslationInput {
+  language: String
+  namespace: String
+  name: String
+  value: String
+}
+
+input UpdateTranslationInput {
+  language: String
+  namespace: String
+  data: AWSJSON
+}
+
+type ModelTransactionConnection @aws_iam @aws_cognito_user_pools {
+  items: [Transaction]!
+  nextToken: String
+}
+
+input ModelTransactionFilterInput {
+  userId: ModelStringInput
+  purchaseToken: ModelStringInput
+  expiresAt: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelTransactionFilterInput]
+  or: [ModelTransactionFilterInput]
+  not: ModelTransactionFilterInput
+}
+
+# ****************************************************************************
+# USER
+# ****************************************************************************
+type User @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  identityId: ID
+  email: AWSEmail
+  about: String
+  firstName: String
+  lastName: String
+  phone: AWSPhone
+  blocked: [String]
+  blockedBy: [String]
+  country: String
+  profileImg: Image
+  interests: [String]
+  locale: String
+  onboardingStatus: OnboardingStatus
+  onboardingEntity: ID
+  signatures(
+    filter: ModelSignatureFilterInput
+    sortDirection: ModelSortDirection
+    limit: Int
+    nextToken: String
+  ): ModelSignatureConnection
+  teamId: ID
+  team: Team
+  userType: UserType
+  rating: Int
+  # ratings: [Rating]
+  reportReasons: [String]
+  notificationPreferences: NotificationPreferences
+  zaiUserId: ID
+  zaiUserWalletId: ID
+  zaiNppCrn: String
+  ipAddress: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  owner: String
+}
+
+# TODO: hide zai details? from user's view and remain stored in database?
+
+enum OnboardingStatus {
+  PROFILE
+  BUSINESS
+  PLANS
+  COMPLETED
+}
+
+enum UserType {
+  Buyers
+  Sellers
+}
+
+input BlockUserInput {
+  userId: String
+  reason: ReportReason
+}
+
+input ReportUserInput {
+  userId: String
+  reason: ReportReason
+}
+
+enum ReportReason {
+  SPAM
+  OFFENSIVE
+}
+
+input UpdateUserInput {
+  id: ID!
+  about: String
+  firstName: String
+  lastName: String
+  country: String
+  profileImg: ImageInput
+  interests: [String]
+  locale: String
+  onboardingStatus: OnboardingStatus
+  onboardingEntity: ID
+  userType: UserType
+  notificationPreferences: NotificationPreferencesInput
+}
+
+type NotificationPreferences {
+  email: Boolean
+  push: Boolean
+  sms: Boolean
+}
+
+input NotificationPreferencesInput {
+  email: Boolean
+  push: Boolean
+  sms: Boolean
+}
+
+type ModelUserConnection @aws_iam @aws_cognito_user_pools {
+  items: [User]!
+  nextToken: String
+}
+
+input ModelOnboardingStatusInput {
+  eq: OnboardingStatus
+  ne: OnboardingStatus
+}
+
+input ModelUserTypeInput {
+  eq: UserType
+  ne: UserType
+}
+
+input ModelUserFilterInput {
+  id: ModelIDInput
+  identityId: ModelIDInput
+  email: ModelStringInput
+  about: ModelStringInput
+  firstName: ModelStringInput
+  lastName: ModelStringInput
+  phone: ModelStringInput
+  blocked: ModelStringInput
+  blockedBy: ModelStringInput
+  country: ModelStringInput
+  interests: ModelStringInput
+  locale: ModelStringInput
+  onboardingStatus: ModelOnboardingStatusInput
+  onboardingEntity: ModelIDInput
+  teamId: ModelIDInput
+  userType: ModelUserTypeInput
+  reportReasons: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelUserFilterInput]
+  or: [ModelUserFilterInput]
+  not: ModelUserFilterInput
+}
+
+# ****************************************************************************
+# USER CONVERSATION
+# ****************************************************************************
+type UserConversation @aws_iam @aws_cognito_user_pools {
+  conversationId: ID!
+  conversation: Conversation
+  userId: ID!
+  user: User
+  users: [String]
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID!
+  conversationUserConversationsId: ID
+}
+
+type ModelUserConversationConnection @aws_iam @aws_cognito_user_pools {
+  items: [UserConversation]!
+  nextToken: String
+}
+
+input ModelUserConversationFilterInput {
+  conversationId: ModelIDInput
+  userId: ModelIDInput
+  users: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelUserConversationFilterInput]
+  or: [ModelUserConversationFilterInput]
+  not: ModelUserConversationFilterInput
+  conversationUserConversationsId: ModelIDInput
+}
+
+input ModelUserConversationConditionInput {
+  conversationId: ModelIDInput
+  userId: ModelIDInput
+  users: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelUserConversationConditionInput]
+  or: [ModelUserConversationConditionInput]
+  not: ModelUserConversationConditionInput
+  conversationUserConversationsId: ModelIDInput
+}
+
+input CreateUserConversationInput {
+  conversationId: ID!
+  userId: ID!
+  users: [String]
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID
+  conversationUserConversationsId: ID
+}
+
+input UpdateUserConversationInput {
+  conversationId: ID
+  userId: ID
+  users: [String]
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  id: ID!
+  conversationUserConversationsId: ID
+}
+
+input DeleteUserConversationInput {
+  id: ID!
+}
+
+input ModelSubscriptionUserConversationFilterInput {
+  conversationId: ModelSubscriptionIDInput
+  userId: ModelSubscriptionIDInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionUserConversationFilterInput]
+  or: [ModelSubscriptionUserConversationFilterInput]
+}
+
+# ****************************************************************************
+# WALLET
+# ****************************************************************************
+type Wallet @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  owner: ID!
+  balance: Int
+  currency: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+# ****************************************************************************
+# XERO
+# ****************************************************************************
+type XeroAddress {
+  addressType: String
+  addressLine1: String
+  addressLine2: String
+  addressLine3: String
+  addressLine4: String
+  city: String
+  region: String
+  postalCode: String
+  country: String
+  attentionTo: String
+}
+
+input XeroCreateConsentUrlInput {
+  scopeSet: XeroScopeSet!
+}
+
+type XeroContact {
+  contactID: ID!
+  contactNumber: String
+  accountNumber: String
+  contactStatus: String
+  name: String
+  firstName: String
+  lastName: String
+  companyNumber: String
+  emailAddress: String
+  bankAccountDetails: String
+  taxNumber: String
+  accountsReceivableTaxType: String
+  accountsPayableTaxType: String
+  addresses: [XeroAddress]
+  phones: [XeroPhone]
+  isSupplier: Boolean
+  isCustomer: Boolean
+  defaultCurrency: String
+  updatedDateUTC: String
+  contactPersons: [XeroContactPerson]
+  hasAttachments: Boolean
+  xeroNetworkKey: String
+  salesDefaultAccountCode: String
+  purchasesDefaultAccountCode: String
+  # salesTrackingCategories: [XeroTrackingCategory]
+  # purchasesTrackingCategories: [XeroTrackingCategory]
+  trackingCategoryName: String
+  trackingCategoryOption: String
+  paymentTerms: String
+  # contactGroups: [XeroContactGroup]
+  website: String
+  # brandingTheme: XeroBrandingTheme
+  # batchPayments: XeroBatchPayment
+  discount: Float
+  # balances: XeroBalances
+}
+
+type XeroContactPerson {
+  firstName: String
+  lastName: String
+  emailAddress: String
+  includeInEmails: Boolean
+}
+
+input XeroCreateTokenSetInput {
+  url: String!
+  scopeSet: XeroScopeSet!
+}
+
+type XeroCreateTokenSetResponse {
+  token: String
+  expiresIn: Int
+  user: XeroCreateTokenSetUser
+}
+
+type XeroCreateTokenSetUser {
+  email: String
+  givenName: String
+  familyName: String
+}
+
+enum XeroScopeSet {
+  PROFILE
+  ACCOUNTING
+}
+
+type XeroInvoice {
+  invoiceID: ID!
+  type: String
+  status: XeroInvoiceStatus
+  lineAmountTypes: String
+  currencyCode: String
+  date: String
+  dueDate: String
+  lineItems: [XeroLineItem]
+  subTotal: Float
+  totalTax: Float
+  total: Float
+  invoiceNumber: String
+  reference: String
+  hasAttachments: Boolean
+  updatedDateUTC: String
+  currencyRate: Float
+  remainingCredit: Float
+  # allocations: [XeroAllocation]
+  amountDue: Float
+  amountPaid: Float
+  fullyPaidOnDate: String
+  amountCredited: Float
+  brandingThemeID: String
+  hasErrors: Boolean
+  contact: XeroContact
+  # payments: [XeroPayment]
+  # prepayments: [XeroPrepayment]
+  # overpayments: [XeroOverpayment]
+}
+
+enum XeroInvoiceStatus {
+  DRAFT
+  SUBMITTED
+  DELETED
+  AUTHORISED
+  PAID
+  VOIDED
+}
+
+type XeroLineItem {
+  lineItemID: ID!
+  description: String
+  quantity: Float
+  unitAmount: Float
+  itemCode: String
+  accountCode: String
+  accountID: String
+  taxType: String
+  taxAmount: Float
+  lineAmount: Float
+  taxNumber: Float
+  # item: XeroLineItemItem
+  # tracking: [XeroLineItemTracking]
+  discountRate: Float
+  discountAmount: Float
+  repeatingInvoiceID: String
+}
+
+type XeroPhone {
+  phoneType: String
+  phoneNumber: String
+  phoneAreaCode: String
+  phoneCountryCode: String
+}
+
+# ****************************************************************************
+# ZAI
+# ****************************************************************************
+input CreateZaiPaymentMethodTokenInput {
+  tokenType: ZaiTokenType!
+}
+
+input CreatePayToAgreementInput {
+  agreementUuid: ID!
+}
+
+enum ZaiTokenType {
+  card
+  bank
+}
+
+input ValidatePayToAgreementInput {
+  accountNumber: String!
+  bsb: String!
+  description: String
+  entityId: ID!
+  billPayments: [BillsPaymentInput!]!
+  maxPaymentAmount: Int!
+}
+
+type ZaiPayToAgreement {
+  agreementUuid: ID!
+  status: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+type ZaiPayToFailedPayment {
+  id: ID!
+  agreementUuid: ID!
+  errorMessage: String
+}
+
+# ****************************************************************************
+# QUERIES
+# ****************************************************************************
+
+type Query {
+  # ABR
+  # TODO: rename to abrLookupByAbn
+  abrLookup(abn: String): ABNInformation! @aws_iam @aws_cognito_user_pools
+  abrLookupByName(name: String): ModelAbrNameSearchInformationConnection!
+    @aws_iam
+    @aws_cognito_user_pools
+
+  # ADMINS
+  getAdmin(id: ID!): Admin
+    @aws_iam
+    @aws_cognito_user_pools(cognito_groups: ["SuperAdmins"])
+  listAdmins(
+    filter: ModelAdminFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelAdminConnection
+    @aws_iam
+    @aws_cognito_user_pools(cognito_groups: ["SuperAdmins"])
+
+  # AUTOCOMPLETE RESULTS
+  autocompleteResultsByType(
+    type: AutocompleteType!
+    searchName: String!
+    sortDirection: ModelSortDirection
+    filter: ModelEntityFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelAutocompleteResultConnection @aws_iam @aws_cognito_user_pools
+  getAutoComplete(id: ID!): GetAutoCompleteResult
+    @aws_iam
+    @aws_cognito_user_pools
+
+  # CHAT
+
+  # CONTACTS
+  getContact(id: ID!): Contact @aws_iam @aws_cognito_user_pools
+  contactsByEntity(
+    entityId: ID!
+    sortDirection: ModelSortDirection
+    filter: ModelContactFilterInput
+    nextToken: String
+  ): ModelContactConnection
+    @aws_iam
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+
+  # CONVERSATIONS
+  getConversation(id: ID!): Conversation @aws_iam @aws_cognito_user_pools
+  listConversations(
+    filter: ModelConversationFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelConversationConnection @aws_iam @aws_cognito_user_pools
+
+  # ENTITIES
+  getEntity(id: ID!): Entity @aws_iam @aws_cognito_user_pools
+
+  # ENTITY USER
+  entityUsersByUser(
+    sortDirection: ModelSortDirection
+    filter: ModelEntityUserFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelEntityUserConnection @aws_iam @aws_cognito_user_pools
+
+  entityUsersByEntityId(
+    entityId: ID
+    sortDirection: ModelSortDirection
+    filter: ModelEntityUserFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelEntityUserConnection @aws_iam @aws_cognito_user_pools
+
+  # FRANKIEONE
+  getBusinessLookup(query: String): [BusinessLookupResult]!
+    @aws_iam
+    @aws_cognito_user_pools
+
+  # MESSAGES
+  getMessage(id: ID!): Message @aws_iam @aws_cognito_user_pools
+  listMessages(
+    filter: ModelMessageFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelMessageConnection @aws_iam @aws_cognito_user_pools
+  messagesByConversation(
+    conversationId: ID!
+    createdAt: ModelStringKeyConditionInput
+    sortDirection: ModelSortDirection
+    filter: ModelMessageFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelMessageConnection @aws_iam @aws_cognito_user_pools
+
+  # NOTIFICATIONS
+  notificationsByUser(
+    sortDirection: ModelSortDirection
+    filter: ModelNotificationFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelNotificationConnection @aws_iam @aws_cognito_user_pools
+
+  # OPTIONS
+  getOption(id: ID!): Option @aws_iam @aws_cognito_user_pools
+  listOptions(
+    filter: ModelOptionFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelOptionConnection @aws_iam @aws_cognito_user_pools
+  optionsByName(
+    name: String!
+    label: ModelStringKeyConditionInput
+    sortDirection: ModelSortDirection
+    filter: ModelOptionFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelOptionConnection @aws_iam @aws_cognito_user_pools
+  optionsByGroup(
+    group: String!
+    label: ModelStringKeyConditionInput
+    sortDirection: ModelSortDirection
+    filter: ModelOptionFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelOptionConnection @aws_iam @aws_cognito_user_pools
+
+  # RATINGS
+  listRatingsByUser(
+    userId: String!
+    sortDirection: ModelSortDirection
+    filter: ModelTransactionFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelRatingConnection @aws_iam @aws_cognito_user_pools
+
+  # TASKS
+  getTask(id: ID!, entityId: ID!): Task @aws_iam @aws_cognito_user_pools
+  tasksByEntityFrom(
+    entityId: ID!
+    status: TaskSearchStatus!
+    sortDirection: ModelSortDirection
+    filter: ModelTaskFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelTaskConnection @aws_iam @aws_cognito_user_pools
+  tasksByEntityTo(
+    entityId: ID!
+    status: TaskSearchStatus!
+    sortDirection: ModelSortDirection
+    filter: ModelTaskFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelTaskConnection @aws_iam @aws_cognito_user_pools
+
+  tasksByEntityBy(
+    entityIdBy: ID!
+    status: TaskSearchStatus!
+    sortDirection: ModelSortDirection
+    filter: ModelTaskFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelTaskConnection @aws_iam @aws_cognito_user_pools
+
+  # TASK PAYMENTS
+  taskPaymentsByTask(
+    taskId: ID!
+    scheduledAt: ModelStringKeyConditionInput
+    sortDirection: ModelSortDirection
+    filter: ModelTaskPaymentFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelTaskPaymentConnection @aws_iam @aws_cognito_user_pools
+
+  # TEAM
+  getTeam(id: ID!): Team @aws_iam @aws_cognito_user_pools
+  listTeams(
+    filter: ModelTeamFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelTeamConnection @aws_iam @aws_cognito_user_pools
+
+  # TEAM USERS
+  teamUsersByTeamIdAndCreatedAt(
+    teamId: ID!
+    createdAt: ModelStringKeyConditionInput
+    sortDirection: ModelSortDirection
+    filter: ModelTeamUserFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelTeamUserConnection @aws_iam @aws_cognito_user_pools
+  teamUsersByUserIdAndCreatedAt(
+    userId: ID!
+    createdAt: ModelStringKeyConditionInput
+    sortDirection: ModelSortDirection
+    filter: ModelTeamUserFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelTeamUserConnection @aws_iam @aws_cognito_user_pools
+
+  # TRANSACTIONS
+  getTransaction(id: ID!): Transaction @aws_iam @aws_cognito_user_pools
+  listTransactions(
+    filter: ModelTransactionFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelTransactionConnection @aws_iam @aws_cognito_user_pools
+  transactionsByUserIdAndCreatedAt(
+    userId: String!
+    createdAt: ModelStringKeyConditionInput
+    sortDirection: ModelSortDirection
+    filter: ModelTransactionFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelTransactionConnection @aws_iam @aws_cognito_user_pools
+  transactionsByPurchaseTokenAndCreatedAt(
+    purchaseToken: String!
+    createdAt: ModelStringKeyConditionInput
+    sortDirection: ModelSortDirection
+    filter: ModelTransactionFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelTransactionConnection @aws_iam @aws_cognito_user_pools
+
+  # TRANSLATIONS
+  getTranslation(language: String, namespace: String): Translation
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins"])
+  listTranslations: [TranslationConnection]
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins"])
+
+  # USER CONVERSATIONS
+  getUserConversation(id: ID!): UserConversation
+    @aws_iam
+    @aws_cognito_user_pools
+  listUserConversations(
+    filter: ModelUserConversationFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelUserConversationConnection @aws_iam @aws_cognito_user_pools
+  userConversationsByConversationIdAndCreatedAt(
+    conversationId: ID!
+    createdAt: ModelStringKeyConditionInput
+    sortDirection: ModelSortDirection
+    filter: ModelUserConversationFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelUserConversationConnection @aws_iam @aws_cognito_user_pools
+  userConversationsByUserId(
+    userId: ID!
+    sortDirection: ModelSortDirection
+    filter: ModelUserConversationFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelUserConversationConnection @aws_iam @aws_cognito_user_pools
+
+  # USERS
+  getUser(id: ID!): User @aws_iam @aws_cognito_user_pools
+  listUsers(
+    id: ID
+    filter: ModelUserFilterInput
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModelUserConnection @aws_iam @aws_cognito_user_pools
+  usersByTeamId(
+    teamId: ID!
+    sortDirection: ModelSortDirection
+    filter: ModelUserFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelUserConnection @aws_iam @aws_cognito_user_pools
+
+  # XERO
+  xeroListContacts(page: Int): [XeroContact] @aws_cognito_user_pools
+  xeroListTransactions(statuses: [XeroInvoiceStatus], page: Int): [XeroInvoice]
+    @aws_cognito_user_pools
+
+  # ZAI
+  getPayToAgreement(agreementUuid: String!): ZaiPayToAgreement
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+  getPayToFailedPayment(instructionId: String!): ZaiPayToFailedPayment
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+}
+
+# ****************************************************************************
+# MUTATIONS
+# ****************************************************************************
+type Mutation {
+  # ADMINS
+  createAdmin(input: CreateAdminInput): Admin
+    @aws_cognito_user_pools(cognito_groups: ["SuperAdmins"])
+  updateAdmin(
+    input: UpdateAdminInput!
+    condition: ModelAdminConditionInput
+  ): Admin @aws_iam @aws_cognito_user_pools(cognito_groups: ["SuperAdmins"])
+  deleteAdmin(input: DeleteAdminInput): Admin
+    @aws_cognito_user_pools(cognito_groups: ["SuperAdmins"])
+
+  # CONTACT
+  createContact(input: CreateContactInput!): Contact
+    @aws_iam
+    @aws_cognito_user_pools
+  createContactBulkUpload(input: CreateContactBulkImportInput!): AWSJSON
+    @aws_iam
+    @aws_cognito_user_pools
+  updateContact(input: UpdateContactInput!): Contact
+    @aws_iam
+    @aws_cognito_user_pools
+
+  # CONVERSATIONS
+  createConversation(
+    input: CreateConversationInput!
+    condition: ModelConversationConditionInput
+  ): Conversation @aws_iam @aws_cognito_user_pools
+  updateConversation(
+    input: UpdateConversationInput!
+    condition: ModelConversationConditionInput
+  ): Conversation @aws_iam @aws_cognito_user_pools
+  deleteConversation(
+    input: DeleteConversationInput!
+    condition: ModelConversationConditionInput
+  ): Conversation @aws_iam @aws_cognito_user_pools
+
+  # ENTITY
+  createEntity(input: CreateEntityInput!): Entity
+    @aws_iam
+    @aws_cognito_user_pools
+
+  updateEntity(input: UpdateEntityInput!): Entity
+    @aws_iam
+    @aws_cognito_user_pools
+
+  deleteEntity(
+    input: DeleteEntityInput!
+    condition: ModelEntityConditionInput
+  ): Entity @aws_iam @aws_cognito_user_pools
+
+  # ENTITY USER
+  createEntityUser(input: CreateEntityUserInput!): EntityUser
+    @aws_iam
+    @aws_cognito_user_pools
+  # TODO: review this
+  deleteEntityUser(input: DeleteEntityUserInput): EntityUser
+    @aws_iam
+    @aws_cognito_user_pools
+
+  #FRANKIEONE
+  createVerificationToken(
+    input: CreateVerificationTokenInput
+  ): VerificationUiToken @aws_iam @aws_cognito_user_pools
+  lookupEntityOwnership(input: LookupEntityOwnershipInput): AWSJSON!
+    @aws_iam
+    @aws_cognito_user_pools
+
+  # MESSAGES
+  createMessage(
+    input: CreateMessageInput!
+    condition: ModelMessageConditionInput
+  ): Message @aws_iam @aws_cognito_user_pools
+  updateMessage(
+    input: UpdateMessageInput!
+    condition: ModelMessageConditionInput
+  ): Message @aws_iam @aws_cognito_user_pools
+
+  # NOTIFICATIONS
+  createNotification(input: CreateNotificationInput): Notification @aws_iam
+  updateNotification(input: UpdateNotificationInput): Notification
+    @aws_iam
+    @aws_cognito_user_pools
+
+  # OPTIONS
+  createOption(
+    input: CreateOptionInput!
+    condition: ModelOptionConditionInput
+  ): Option @aws_iam @aws_cognito_user_pools
+  updateOption(
+    input: UpdateOptionInput!
+    condition: ModelOptionConditionInput
+  ): Option @aws_iam @aws_cognito_user_pools
+  deleteOption(
+    input: DeleteOptionInput!
+    condition: ModelOptionConditionInput
+  ): Option @aws_iam @aws_cognito_user_pools
+
+  # PAYMENTS
+  createPayment(input: CreatePaymentInput): [Payment]
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+
+  retryPayment(input: RetryPaymentInput): [Payment]
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+
+  createTaskPayment(input: CreateTaskPaymentInput): [Payment]
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+
+  # PAYMENT METHODS
+  createPaymentMethod(input: CreatePaymentMethodInput): PaymentMethod
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+
+  updatePaymentMethod(input: UpdatePaymentMethodInput): PaymentMethod
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+
+  # PUSH NOTIFICATIONS
+  createPushNotification(input: CreatePushNotificationInput): AWSJSON
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins"])
+
+  # RATING
+  updateRating(input: UpdateRatingInput): Rating
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+
+  # SIGNATURE
+  createSignature(input: CreateSignatureInput): Signature
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+  deleteSignature(input: DeleteSignatureInput): Signature
+
+  # TASKS
+  createTask(input: CreateTaskInput): Task
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+  updateTask(input: UpdateTaskInput): Task
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+  createTaskDocumentUrl(input: CreateTaskDocumentUrlInput): TaskDocumentUrl
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+
+  # TEAMS
+  createTeam(input: CreateTeamInput): Team
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+  updateTeam(input: UpdateTeamInput!, condition: ModelTeamConditionInput): Team
+    @aws_iam
+    @aws_cognito_user_pools
+
+  # TEAM USERS
+  createTeamUser(input: CreateTeamUserInput): TeamUser
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+  deleteTeamUser(input: DeleteTeamUserInput): TeamUser @aws_cognito_user_pools
+
+  # TRANSLATIONS
+  createTranslation(input: CreateTranslationInput): Translation
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins"])
+  updateTranslation(input: UpdateTranslationInput): Translation
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins"])
+
+  # USERS
+  updateUser(input: UpdateUserInput): User @aws_cognito_user_pools
+  blockUser(input: BlockUserInput): User @aws_cognito_user_pools
+  deleteAccount: User @aws_cognito_user_pools
+
+  # USER CONVERSATIONS
+  createUserConversation(
+    input: CreateUserConversationInput!
+    condition: ModelUserConversationConditionInput
+  ): UserConversation @aws_iam @aws_cognito_user_pools
+  updateUserConversation(
+    input: UpdateUserConversationInput!
+    condition: ModelUserConversationConditionInput
+  ): UserConversation @aws_iam @aws_cognito_user_pools
+  deleteUserConversation(
+    input: DeleteUserConversationInput!
+    condition: ModelUserConversationConditionInput
+  ): UserConversation @aws_iam @aws_cognito_user_pools
+
+  publishUserMessage(userId: ID!): Message
+  # validateUserIAPReceipt(input: VerifyIAPInput):  @aws_cognito_user_pools
+
+  # XERO
+  #TODO: check if  @aws_api_key necessary auth
+  xeroCreateConsentUrl(input: XeroCreateConsentUrlInput): String
+    @aws_iam
+    @aws_cognito_user_pools
+    @aws_api_key
+  #TODO: check if necessary auth
+  xeroCreateTokenSet(input: XeroCreateTokenSetInput): String
+    @aws_iam
+    @aws_cognito_user_pools
+    @aws_api_key
+
+  # ZAI
+  createZaiPaymentMethodToken(input: CreateZaiPaymentMethodTokenInput): String
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+  createPayToAgreement(input: CreatePayToAgreementInput): ZaiPayToAgreement
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+  validatePayToAgreement(input: ValidatePayToAgreementInput): String
+    @aws_cognito_user_pools(cognito_groups: ["Admins", "SuperAdmins", "Users"])
+}
+
+# ****************************************************************************
+# SUBSCRIPTIONS
+# ****************************************************************************
+
+type Subscription {
+  # CONVERSATION
+  onCreateConversation(
+    filter: ModelSubscriptionConversationFilterInput
+  ): Conversation
+    @aws_subscribe(mutations: ["createConversation"])
+    @aws_iam
+    @aws_cognito_user_pools
+
+  # FRANKIEONE
+  onUpdateEntity(entityId: ID!): Entity
+    @aws_subscribe(mutations: ["updateEntity"])
+    @aws_iam
+    @aws_cognito_user_pools
+
+  # MESSAGES
+  onCreateMessageForConversation(conversationId: ID!): Message
+    @aws_subscribe(mutations: ["createMessage"])
+    @aws_cognito_user_pools(cognito_groups: ["Users", "Admins", "SuperAdmins"])
+
+  # NOTIFICATIONS
+  onCreateNotification(
+    filter: ModelSubscriptionNotificationFilterInput
+  ): Notification
+    @aws_subscribe(mutations: ["createNotification"])
+    @aws_iam
+    @aws_cognito_user_pools
+
+  # USER CONVERSATIONS
+  onCreateUserConversationForUser(userId: ID!): UserConversation
+    @aws_subscribe(mutations: ["createUserConversation"])
+    @aws_cognito_user_pools(cognito_groups: ["Users", "Admins", "SuperAdmins"])
+  onCreateMessageForSenderUser(sender: String!): Message
+    @aws_subscribe(mutations: ["createMessage"])
+  onCreateMessageForReceiverUser(receiver: String!): Message
+    @aws_subscribe(mutations: ["createMessage"])
+  onUpdateConversation(
+    filter: ModelSubscriptionConversationFilterInput
+  ): Conversation
+    @aws_subscribe(mutations: ["updateConversation"])
+    @aws_iam
+    @aws_cognito_user_pools
+  onDeleteConversation(
+    filter: ModelSubscriptionConversationFilterInput
+  ): Conversation
+    @aws_subscribe(mutations: ["deleteConversation"])
+    @aws_iam
+    @aws_cognito_user_pools
+  onCreateUserConversation(
+    filter: ModelSubscriptionUserConversationFilterInput
+  ): UserConversation
+    @aws_subscribe(mutations: ["createUserConversation"])
+    @aws_iam
+    @aws_cognito_user_pools
+  onUpdateUserConversation(
+    filter: ModelSubscriptionUserConversationFilterInput
+  ): UserConversation
+    @aws_subscribe(mutations: ["updateUserConversation"])
+    @aws_iam
+    @aws_cognito_user_pools
+  onDeleteUserConversation(
+    filter: ModelSubscriptionUserConversationFilterInput
+  ): UserConversation
+    @aws_subscribe(mutations: ["deleteUserConversation"])
+    @aws_iam
+    @aws_cognito_user_pools
+  onCreateMessage(filter: ModelSubscriptionMessageFilterInput): Message
+    @aws_subscribe(mutations: ["createMessage"])
+    @aws_iam
+    @aws_cognito_user_pools
+  onUpdateMessage(filter: ModelSubscriptionMessageFilterInput): Message
+    @aws_subscribe(mutations: ["updateMessage"])
+    @aws_iam
+    @aws_cognito_user_pools
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelSubscriptionStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  in: [String]
+  notIn: [String]
+}
+
+input ModelSubscriptionIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  in: [Int]
+  notIn: [Int]
+}
+
+input ModelSubscriptionFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  in: [Float]
+  notIn: [Float]
+}
+
+input ModelSubscriptionBooleanInput {
+  ne: Boolean
+  eq: Boolean
+}
+
+input ModelSubscriptionIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  in: [ID]
+  notIn: [ID]
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+input ModelStringKeyConditionInput {
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  between: [String]
+  beginsWith: String
+}

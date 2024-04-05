@@ -1,0 +1,17 @@
+{
+  "addTeamMemberTitle": "Add team member",
+  "addTeamMembers": "Add team members",
+  "confirmDeleteTeamMemberMessage": "Are you sure you would like to delete the user from your team?",
+  "confirmDeleteTeamMemberTitle": "Delete team member",
+  "createTeamTitle": "Create team",
+  "teamCreatedSuccessfully": "Team created successfully",
+  "teamMemberAdded": "Team member added successfully",
+  "teamMemberTempPassword": "The new team member will receive a temporary password if they don't have an account",
+  "teamMemberTitle": "Team member",
+  "teamMembersTitle": "Team members",
+  "teamNamePlaceholder": "Team name",
+  "teamNameTitle": "Team name",
+  "teamUpdatedSuccessfully": "Team updated successfully",
+  "updateTeamTitle": "Update team",
+  "viewTeamTitle": "View team"
+}

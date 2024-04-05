@@ -1,0 +1,9 @@
+{
+  "pushPermissionTitle": "Keep updated",
+  "pushPermissionDescription": "We send you notifications about messages received from other users",
+  "enableNotificationsTitle": "Enable notifications",
+  "cantAccessSettingsTitle": "Cannot Open Settings",
+  "cantAccessSettingsMessage": "Please open your device settings and adjust the denied permission manually",
+  "goToSettings": "Go To Settings",
+  "allowNotifications": "Allow Notifications"
+}

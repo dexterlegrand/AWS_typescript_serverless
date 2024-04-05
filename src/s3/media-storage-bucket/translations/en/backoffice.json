@@ -1,0 +1,23 @@
+{
+  "addOptionForTitle": "Add option for",
+  "adminCreatedSuccess": "Admin created successfully",
+  "adminDeletedSuccess": "Admin deleted successfully",
+  "adminSignIn": "Admin sign in",
+  "adminsTitle": "Admins",
+  "categoriesTitle": "Categories",
+  "createAdminTitle": "Create admin",
+  "dashboardTitle": "Dashboard",
+  "de": "Deutsch",
+  "deOption": "Deutsch option",
+  "en": "English",
+  "enOption": "English option",
+  "newOptionTitle": "New option",
+  "optionLabelRequired": "Option label required",
+  "optionTitle": "Option",
+  "productsForReview": "Products for review",
+  "productsTitle": "Products",
+  "tagsTitle": "Tags",
+  "translationsTitle": "Translations",
+  "translationsUpdateInfo": "Ensure only 1 admin is updating a translation's category at a time to prevent overwriting changes",
+  "updateAdminTitle": "Update admin"
+}

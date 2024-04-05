@@ -1,0 +1,43 @@
+{
+  "name": "backend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/backend/src",
+  "targets": {
+    "deploy": {
+      "executor": "@ago-dev/nx-aws-cdk-v2:deploy",
+      "options": {}
+    },
+    "destroy": {
+      "executor": "@ago-dev/nx-aws-cdk-v2:destroy",
+      "options": {}
+    },
+    "bootstrap": {
+      "executor": "@ago-dev/nx-aws-cdk-v2:bootstrap",
+      "options": {}
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/backend/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["coverage/apps/backend"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/apps/backend"
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      },
+      "dependsOn": ["transpile:appsync:resolvers"]
+    }
+  },
+  "tags": []
+}

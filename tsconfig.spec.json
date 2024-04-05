@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "types": [
+      "vitest/globals",
+      "vitest/importMeta",
+      "vite/client",
+      "node"
+    ],
+    "paths": {
+      "*": [
+        "./src/layers/dependencyLayer/nodejs/node_modules/*"
+      ],
+      "/opt/*": [
+        "./src/layers/dependencyLayer/opt/*"
+      ]
+    }
+  },
+  "include": [
+    "vite.config.ts",
+    "src/**/*.test.ts",
+    "src/**/*.spec.ts",
+    "src/**/*.d.ts"
+  ]
+}

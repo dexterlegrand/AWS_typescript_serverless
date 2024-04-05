@@ -1,0 +1,22 @@
+{
+  "clearFiltersDescription": "Try removing search filters",
+  "clearFiltersTitle": "Clear filters",
+  "confirmDeleteProductMessage": "Are you sure you want to delete this product?",
+  "confirmDeleteProductTitle": "Delete product?",
+  "createProductTitle": "Create product",
+  "noMoreProducts": "No more products",
+  "noUserProductsDescription": "To get started, create your first product",
+  "noUserProductsTitle": "No Products",
+  "orLessCharacters": "or less characters",
+  "productCreatedSuccess": "Product created successfully",
+  "productDeleted": "Product Deleted",
+  "productDeletedSuccess": "Product deleted successfully",
+  "productTitle": "Product",
+  "productUpdatedSuccess": "Product updated successfully",
+  "searchFiltersTitle": "Search filters",
+  "titleMustBe": "Title must be",
+  "updateFiltersTitle": "Update filters",
+  "updateProductTitle": "Update product",
+  "viewProductTitle": "View product",
+  "viewProducts": "View products"
+}

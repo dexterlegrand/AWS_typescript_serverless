@@ -1,0 +1,19 @@
+{
+  "CodeDeliveryFailureException": "Invalid email provided / Unable to send the email",
+  "CodeMismatchException": "Invalid verification code provided, please try again",
+  "Default": "Unauthorised",
+  "ExpiredCodeException": "Code has expired",
+  "Incorrect username or password.": "Incorrect username or password",
+  "InvalidPasswordException": "Invalid password",
+  "LimitExceededException": "Attempt limit exceeded, please try after some time",
+  "NetworkError": "Network error",
+  "NotAuthorizedException": "Incorrect username or password",
+  "Password attempts exceeded": "Password attempts exceeded",
+  "PasswordResetRequiredException": "A password reset is required to log in",
+  "TooManyFailedAttemptsException": "Too many requests, try again later",
+  "TooManyRequestsException": "Too many requests, try again later",
+  "UnauthorizedException": "Unauthorised",
+  "UserNotConfirmedException": "User is not confirmed",
+  "UserNotFoundException": "User does not exist",
+  "UsernameExistsException": "Email address / username already exists for a user"
+}
